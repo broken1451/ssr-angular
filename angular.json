@@ -47,7 +47,7 @@
                 "0.0.0.0:4200",
                 "192.168.100.6",
                 "192.168.100.6:4200",
-                "https://pokemon-ssr-adr.netlify.app/"
+                "pokemon-ssr-adr.netlify.app"
               ]
             },
             "ssr": {
