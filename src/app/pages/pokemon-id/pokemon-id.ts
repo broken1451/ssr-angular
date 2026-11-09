@@ -1,7 +1,7 @@
 import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { Pokemon } from './interface/pokemon.interface';
 import { PokemonService } from '../../pokemons/services/PokemonService';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { map, switchMap, tap } from 'rxjs';
 import { Meta, Title } from '@angular/platform-browser';
 
@@ -18,8 +18,13 @@ export class PokemonId implements OnInit {
   private pokemonService = inject(PokemonService);
   private title = inject(Title);
   private meta = inject(Meta);
+  private router = inject(Router);
 
   constructor() {
+  }
+
+  goBack() {
+    this.router.navigate(['/pokemons']);
   }
 
 
@@ -41,9 +46,14 @@ export class PokemonId implements OnInit {
           this.meta.updateTag({ name: 'og:image', content: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemon.id}.png` }); // si no existe la etiqueta, la crea. Si existe, la actualiza.
         }
       })
-    ).subscribe((pokemon) => {
-      // console.log('pokemon', pokemon);
-      this.pokemon.set(pokemon);
+    ).subscribe({
+      next: (pokemon) => {
+        this.pokemon.set(pokemon);
+      },
+      error: (error) => {
+        console.error('Error fetching pokemon:', error);
+        this.router.navigate(['/not-found']);
+      }
     })
 
   }

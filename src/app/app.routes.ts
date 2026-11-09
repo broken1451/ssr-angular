@@ -22,14 +22,21 @@ export const routes: Routes = [
     loadChildren: () => import('./pages/pokemon-id/pokemon-id.routes')
   },
   {
+    path: 'not-found',
+    loadComponent: () => import('./pages/not-found/not-found').then(m => m.NotFound)
+  },
+  {
+    path: '',
+    redirectTo: 'about',
+    pathMatch: 'full'
+  },
+  {
+    // Cualquier ruta que no exista muestra la página 404
     path: '**',
-    redirectTo: 'about' //or
+    redirectTo: 'not-found' //or
     // redirectTo: () => {
-        
     //     // const service= inject(Router);
-
     //     return 'about';
     // }
-
   }
 ];

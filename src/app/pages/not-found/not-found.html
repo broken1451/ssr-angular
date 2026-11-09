@@ -1,0 +1,30 @@
+<section class="flex flex-col items-center justify-center text-center animate-fadeIn py-10">
+
+    <img
+        class="w-48 h-48"
+        ngSrc="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/54.png"
+        width="192"
+        height="192"
+        priority
+        alt="Psyduck confundido">
+
+    <h1 class="text-7xl font-bold text-blue-400 mt-4">404</h1>
+    <hr class="my-4 w-24 border-slate-600">
+
+    <h2 class="text-2xl font-bold">¡Este Pokémon se ha escapado!</h2>
+    <p class="mt-2 mb-8 text-slate-300 max-w-md">
+        La página que buscas no existe o ha sido movida. Ni Psyduck sabe dónde está.
+    </p>
+
+    <nav aria-label="Enlaces de vuelta" class="flex flex-wrap justify-center gap-4">
+        <a routerLink="/pokemons"
+            class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition-all focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-300">
+            Ver Pokémons
+        </a>
+        <a routerLink="/about"
+            class="border border-slate-500 text-white px-4 py-2 rounded hover:bg-slate-800 transition-all focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-300">
+            Ir al inicio
+        </a>
+    </nav>
+
+</section>
