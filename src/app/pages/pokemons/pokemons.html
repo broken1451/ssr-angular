@@ -1,0 +1,23 @@
+<h1 class="text-3xl">Listado de pokemons</h1>
+<h2 class="text-xl">Pagina actual: {{currentPage()}}</h2>
+
+<hr class="my-2">
+
+@if (isLoading()) {
+    <app-pokemon-skeleton />
+} @else {
+    <app-pokemon-list [pokemons]="pokemons()" />
+}
+
+<!-- TODO pokemon list skeleton -->
+
+
+<div class="flex justify-between">
+    <button class="mt-2" (click)="getPokemons(-1)">Previous</button>
+    <button class="mt-2" (click)="getPokemons(+1)">Next</button>
+    <!-- <button class="mt-2" (click)="page2.set(4)">{{page2()}}</button> -->
+    <!-- <button class="mt-2" (click)="previousPage(-1)">Previous</button>
+    <button class="mt-2" (click)="nextPage(+1)">Next</button> -->
+</div>
+
+<!-- TODO buttons cargar siguiente y anteriores -->

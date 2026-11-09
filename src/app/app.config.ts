@@ -6,6 +6,7 @@ import {
 import { provideRouter, withHashLocation } from '@angular/router';
 import { routes } from './app.routes';
 import { provideClientHydration } from '@angular/platform-browser';
+import { provideHttpClient, withFetch, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 
 /**
  * Configuración de la aplicación Angular.
@@ -28,5 +29,6 @@ export const appConfig: ApplicationConfig = {
     provideBrowserGlobalErrorListeners(),
     provideRouter(routes),
     provideClientHydration(),
+    provideHttpClient(withInterceptorsFromDi(), withXhr())
   ],
 };

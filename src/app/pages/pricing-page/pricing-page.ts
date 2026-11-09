@@ -18,7 +18,7 @@ export class PricingPage implements OnInit {
     // document.title = 'Pricing - Pokemon SSR';
     if(isPlatformBrowser(this.platformId)){
       document.title = 'Pricing - Pokemon SSR';
-      console.log({document});  
+      // console.log({document});  
 
     } else {
 
