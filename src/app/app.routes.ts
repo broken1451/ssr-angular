@@ -18,6 +18,10 @@ export const routes: Routes = [
     loadChildren: () => import('./pages/pokemons/pokemons.routes')
   },
   {
+    path: 'pokemons/page/:page',
+    loadChildren: () => import('./pages/pokemons/pokemons.routes')
+  },
+  {
     path: 'pokemon-detail/:id',
     loadChildren: () => import('./pages/pokemon-id/pokemon-id.routes')
   },

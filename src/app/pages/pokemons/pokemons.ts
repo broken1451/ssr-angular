@@ -1,22 +1,22 @@
-import { ApplicationRef, Component, inject, OnDestroy, OnInit, signal } from '@angular/core';
+import { ApplicationRef, Component, effect, inject, OnDestroy, OnInit, signal } from '@angular/core';
 import { PokemonList } from '../../pokemons/components/pokemon-list/pokemon-list';
 import { PokemonSkeleton } from './ui/pokemon-skeleton/pokemon-skeleton';
 import { Observable, Subscription } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 import { PokemonService } from '../../pokemons/services/PokemonService';
 import { SimplePokemon } from '../../pokemons/interfaces/pokemon.interface';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop'
 import { Title } from '@angular/platform-browser';
 
 
 @Component({
-  imports: [PokemonList, PokemonSkeleton],
+  imports: [PokemonList, PokemonSkeleton, RouterLink],
   selector: 'app-pokemons',
   styleUrl: './pokemons.scss',
   templateUrl: './pokemons.html',
 })
-export class Pokemons implements OnInit, OnDestroy  {
+export class Pokemons implements OnDestroy {
 
   public pokemons = signal<SimplePokemon[]>([]);
   public page = signal<number>(0);
@@ -25,12 +25,30 @@ export class Pokemons implements OnInit, OnDestroy  {
   private activatedRoute = inject(ActivatedRoute);
   private router = inject(Router);
   public currentPage = toSignal<number>(
-    this.activatedRoute.queryParamMap.pipe(
-      map((params) => params.get('page') ?? '1'),
-      map((page) => isNaN(Number(page)) ? 1 : Number(page)),
+    this.activatedRoute.params.pipe(
+      map((params) => {
+        console.log('params', params)
+        return params['page'] ?? '1'
+      }),
+      map((page) => {
+        console.log('page: ', page)
+        return isNaN(Number(page)) ? 1 : Number(page)
+      }),
       map((page) => Math.max(1, page))
     )
   )
+
+  public loadOnPage = effect(() => {
+    console.log('loadOnPage effect', this.currentPage());
+    this.getPokemons(this.currentPage());
+  })
+  // public currentPage = toSignal<number>(
+  //   this.activatedRoute.queryParamMap.pipe(
+  //     map((params) => params.get('page') ?? '1'),
+  //     map((page) => isNaN(Number(page)) ? 1 : Number(page)),
+  //     map((page) => Math.max(1, page))
+  //   )
+  // )
 
   /**
    * QUÉ: Signal que indica si los datos todavía se están cargando.
@@ -85,12 +103,12 @@ export class Pokemons implements OnInit, OnDestroy  {
    * PARA QUÉ: Simular una carga de 5 segundos; al terminar, se oculta el
    *           skeleton. Mientras el timer exista, `isStable` será `false`.
    */
-  async ngOnInit(): Promise<void> {
-    this.getPokemons(this.page());
-    setTimeout(() => {
-      this.isLoading.set(false);
-    }, 1500);
-  }
+  // async ngOnInit(): Promise<void> {
+  //   this.getPokemons(this.page());
+  //   setTimeout(() => {
+  //     this.isLoading.set(false);
+  //   }, 1500);
+  // }
 
   /**
    * QUÉ: Hook que se ejecuta cuando el componente se destruye.
@@ -116,44 +134,47 @@ export class Pokemons implements OnInit, OnDestroy  {
     });
   }
 
+  goToPokemon(page: number) {
+    this.router.navigate(['/pokemons/page', page]);
+  }
 
   getPokemons(page: number = 0) {
-    const loadTopage = this.currentPage()! + page;
-    
+    // const loadTopage = this.currentPage()! + page;
+
     this.isLoading.set(true);
     // console.log({loadTopage})
-    this.pokemonService.loadPage(loadTopage).pipe(
-      tap(()=> {
-        this.router.navigate([], {
-          queryParams: { page: loadTopage },
-          // queryParamsHandling: 'merge',
-        });
-      }),
-      tap(()=>{
-        this.title.setTitle(`Listado de pokemons - Página ${loadTopage}`);
+    this.pokemonService.loadPage(page).pipe(
+      // tap(()=> {
+      //   this.router.navigate([], {
+      //     queryParams: { page: loadTopage },
+      //     // queryParamsHandling: 'merge',
+      //   });
+      // }),
+      tap(() => {
+        this.title.setTitle(`Listado de pokemons - Página ${page}`);
       })
-    ).subscribe((pokemons) =>{
+    ).subscribe((pokemons) => {
       // console.log('on init')
       this.pokemons.set(pokemons);
       this.isLoading.set(false);
     })
   }
-  
-  
+
+
   // getPokemons(page: number) {
   //   this.pokemonService.loadPage(this.page()).subscribe((pokemons) =>{
   //     console.log('on init')
   //     this.pokemons.set(pokemons);
   //   })
   // }
-  previousPage( page: number) {
+  previousPage(page: number) {
     // console.log('previousPage', page)
     this.page.update((currentPage) => Math.max(0, currentPage - (+1)));
     // console.log('previousPage', this.page())
     this.getPokemons(this.page());
   }
 
-  nextPage( page: number){
+  nextPage(page: number) {
     // console.log('nextPage', page)
     this.page.update((currentPage) => currentPage + 1);
     // console.log('nextPage', this.page())

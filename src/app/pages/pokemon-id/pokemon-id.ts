@@ -4,6 +4,7 @@ import { PokemonService } from '../../pokemons/services/PokemonService';
 import { ActivatedRoute, Router } from '@angular/router';
 import { map, switchMap, tap } from 'rxjs';
 import { Meta, Title } from '@angular/platform-browser';
+import { Location } from '@angular/common';
 
 @Component({
   imports: [],
@@ -19,12 +20,13 @@ export class PokemonId implements OnInit {
   private title = inject(Title);
   private meta = inject(Meta);
   private router = inject(Router);
+  private location = inject(Location);
 
   constructor() {
   }
 
   goBack() {
-    this.router.navigate(['/pokemons']);
+    this.location.back();
   }
 
 
