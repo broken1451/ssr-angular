@@ -155,6 +155,9 @@ export class Pokemons implements OnDestroy {
       })
     ).subscribe((pokemons) => {
       // console.log('on init')
+      if (this.pokemons().length == 0) {
+        this.router.navigate(['/not-found'])
+      }
       this.pokemons.set(pokemons);
       this.isLoading.set(false);
     })
