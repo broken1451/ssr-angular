@@ -36,6 +36,7 @@
               "zone.js"
             ],
             "server": "src/main.server.ts",
+            "outputMode": "server",
             "security": {
               "allowedHosts": [
                 "localhost",
